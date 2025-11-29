@@ -66,6 +66,17 @@ class OutdatedState extends MusicBeatState
 				leftState = true;
 			}
 
+			#if mobile
+			if(leftState)
+			{
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxTween.tween(warnTextMobile, {alpha: 0}, 1, {
+					onComplete: function (twn:FlxTween) {
+						MusicBeatState.switchState(new MainMenuState());
+					}
+				});
+			}
+			#else
 			if(leftState)
 			{
 				FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -75,6 +86,7 @@ class OutdatedState extends MusicBeatState
 					}
 				});
 			}
+			#end
 		}
 		super.update(elapsed);
 	}
