@@ -2155,6 +2155,8 @@ class PlayState extends MusicBeatState
 
 			#if mobile
 			startedCountdown = mobileControls.instance.visible = true;
+			#else
+			startedCountdown = true;
 			#end
 			
 			Conductor.songPosition = -Conductor.crochet * 5;
@@ -3958,6 +3960,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public var transitioning = false;
+
 	public function endSong():Void
 	{
 		//Should kill you if you tried to cheat
