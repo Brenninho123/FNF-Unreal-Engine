@@ -5,10 +5,12 @@ import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import flixel.math.FlxMath;
+
 #if gl_stats
 import openfl.display._internal.stats.Context3DStats;
 import openfl.display._internal.stats.DrawCallContext;
 #end
+
 #if flash
 import openfl.Lib;
 #end
@@ -63,7 +65,8 @@ class FPS extends TextField
 		selectable = false;
 		mouseEnabled = false;
 		defaultTextFormat = new TextFormat("_sans", 14, color);
-		autoSize = LEFT;
+		//autoSize = LEFT;
+		width = FlxG.width;
 		multiline = true;
 		text = "FPS: ";
 
