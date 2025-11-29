@@ -3,6 +3,7 @@ package options;
 #if DISCORD_ALLOWED
 import Discord.DiscordClient;
 #end
+
 import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -146,12 +147,23 @@ class NotesSubState extends MusicBeatSubstate
 				changeType(1);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
+
+			#if mobile
 			if(touchPad.buttonC.justPressed || controls.RESET) {
 				for (i in 0...3) {
 					resetValue(curSelected, i);
 				}
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
+			#else
+			if(controls.RESET) {
+				for (i in 0...3) {
+					resetValue(curSelected, i);
+				}
+				FlxG.sound.play(Paths.sound('scrollMenu'));
+			}
+			#end
+			
 			if (controls.ACCEPT && nextAccept <= 0) {
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changingNote = true;
