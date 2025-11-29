@@ -3,6 +3,7 @@ package editors;
 #if DISCORD_ALLOWED
 import Discord.DiscordClient;
 #end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
@@ -28,6 +29,7 @@ import haxe.Json;
 import DialogueBoxPsych;
 import lime.system.Clipboard;
 import Alphabet;
+
 #if sys
 import sys.io.File;
 #end
@@ -365,6 +367,8 @@ class DialogueEditorState extends MusicBeatState
 			FlxG.sound.muteKeys = TitleState.muteKeys;
 			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
+
+			#if mobile
 			if(touchPad.buttonY.justPressed || FlxG.keys.justPressed.SPACE) {
 				reloadText(false);
 			}
@@ -373,9 +377,27 @@ class DialogueEditorState extends MusicBeatState
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
 				transitioning = true;
 			}
+			#else
+			if(FlxG.keys.justPressed.SPACE) {
+				reloadText(false);
+			}
+			if(FlxG.keys.justPressed.ESCAPE) {
+				MusicBeatState.switchState(new editors.MasterEditorMenu());
+				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
+				transitioning = true;
+			}
+			#end
+			
 			var negaMult:Array<Int> = [1, -1];
+
+			#if mobile
 			var controlAnim:Array<Bool> = [FlxG.keys.justPressed.W || touchPad.buttonUp.justPressed, FlxG.keys.justPressed.S || touchPad.buttonDown.justPressed];
 			var controlText:Array<Bool> = [FlxG.keys.justPressed.D || touchPad.buttonRight.justPressed, FlxG.keys.justPressed.A || touchPad.buttonLeft.justPressed];
+			#else
+			var controlAnim:Array<Bool> = [FlxG.keys.justPressed.W, FlxG.keys.justPressed.S];
+			var controlText:Array<Bool> = [FlxG.keys.justPressed.D, FlxG.keys.justPressed.A];
+			#end
+			
 			for (i in 0...controlAnim.length) {
 				if(controlAnim[i] && character.jsonFile.animations.length > 0) {
 					curAnim -= negaMult[i];
@@ -396,6 +418,7 @@ class DialogueEditorState extends MusicBeatState
 				}
 			}
 
+			#if mobile
 			if(touchPad.buttonA.justPressed || FlxG.keys.justPressed.O) {
 				dialogueFile.dialogue.remove(dialogueFile.dialogue[curSelected]);
 				if(dialogueFile.dialogue.length < 1) //You deleted everything, dumbo!
@@ -409,6 +432,21 @@ class DialogueEditorState extends MusicBeatState
 				dialogueFile.dialogue.insert(curSelected + 1, copyDefaultLine());
 				changeText(1);
 			}
+			#else
+			if(FlxG.keys.justPressed.O) {
+				dialogueFile.dialogue.remove(dialogueFile.dialogue[curSelected]);
+				if(dialogueFile.dialogue.length < 1) //You deleted everything, dumbo!
+				{
+					dialogueFile.dialogue = [
+						copyDefaultLine()
+					];
+				}
+				changeText();
+			} else if(FlxG.keys.justPressed.P) {
+				dialogueFile.dialogue.insert(curSelected + 1, copyDefaultLine());
+				changeText(1);
+			}
+			#end
 		}
 		super.update(elapsed);
 	}
