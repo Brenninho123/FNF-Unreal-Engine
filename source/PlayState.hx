@@ -4516,7 +4516,8 @@ class PlayState extends MusicBeatState
 	{
 		// var buttonCode:Int = (button.IDs[0].toString().startsWith('NOTE')) ? button.IDs[0] : button.IDs[1];
 
-		var buttonCode:Int = if (button.IDs.filter(id -> id.toString().startsWith("EXTRA")).length > 0) return;
+		if (button.IDs.filter(id -> id.toString().startsWith("EXTRA")).length > 0)
+			return;
 
 		if (!cpuControlled && startedCountdown && !paused && buttonCode > -1 && button.justPressed)
 		{
