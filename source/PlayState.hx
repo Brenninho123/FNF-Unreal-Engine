@@ -4512,25 +4512,38 @@ class PlayState extends MusicBeatState
 #if mobile
 private function onButtonPress(button:TouchButton):Void
 {
-    var buttonCode:Int = (button.IDs[0].toString().startsWith('NOTE')) ? button.IDs[0] : button.IDs[1];
+    var buttonCode:Int = -1;
 
-    if (button.IDs.filter(id -> id.toString().startsWith("EXTRA")).length > 0)
-        return;
+    // Segurança contra array vazio
+    if (button.IDs != null && button.IDs.length > 0)
+    {
+        var firstID:String = Std.string(button.IDs[0]);
+
+        if (firstID.startsWith("NOTE"))
+        {
+            var parsed:Int = Std.parseInt(firstID);
+            if (parsed != null) buttonCode = parsed;
+        }
+        else if (button.IDs.length > 1)
+        {
+            var secondID:String = Std.string(button.IDs[1]);
+            var parsed2:Int = Std.parseInt(secondID);
+            if (parsed2 != null) buttonCode = parsed2;
+        }
+    }
 
     if (!cpuControlled && startedCountdown && !paused && buttonCode > -1 && button.justPressed)
-			if (!boyfriend.stunned && generatedMusic && !endingSong)
-			{
-				// more accurate hit time for the ratings?
-				var lastTime:Float = Conductor.songPosition;
-				Conductor.songPosition = FlxG.sound.music.time;
+    {
+        if (!boyfriend.stunned && generatedMusic && !endingSong)
+        {
+            var lastTime:Float = Conductor.songPosition;
+            Conductor.songPosition = FlxG.sound.music.time;
 
-				var canMiss:Bool = !ClientPrefs.ghostTapping;
+            var canMiss:Bool = !ClientPrefs.ghostTapping;
 
-				// heavily based on my own code LOL if it aint broke dont fix it
-				var pressNotes:Array<Note> = [];
-				// var notesDatas:Array<Int> = [];
-				var notesStopped:Bool = false;
-
+            var pressNotes:Array<Note> = [];
+            var notesStopped:Bool = false;
+			
 				var sortedNotesList:Array<Note> = [];
 				notes.forEachAlive(function(daNote:Note)
 				{
