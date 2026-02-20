@@ -4511,16 +4511,15 @@ class PlayState extends MusicBeatState
 		return -1;
 	}
 
-	#if mobile
-	private function onButtonPress(button:TouchButton):Void
-	{
-		// var buttonCode:Int = (button.IDs[0].toString().startsWith('NOTE')) ? button.IDs[0] : button.IDs[1];
+#if mobile
+private function onButtonPress(button:TouchButton):Void
+{
+    var buttonCode:Int = (button.IDs[0].toString().startsWith('NOTE')) ? button.IDs[0] : button.IDs[1];
 
-		if (button.IDs.filter(id -> id.toString().startsWith("EXTRA")).length > 0)
-			return;
+    if (button.IDs.filter(id -> id.toString().startsWith("EXTRA")).length > 0)
+        return;
 
-		if (!cpuControlled && startedCountdown && !paused && buttonCode > -1 && button.justPressed)
-		{
+    if (!cpuControlled && startedCountdown && !paused && buttonCode > -1 && button.justPressed)
 			if (!boyfriend.stunned && generatedMusic && !endingSong)
 			{
 				// more accurate hit time for the ratings?
